@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-schedule
+spec:
+  selector:
+    matchLabels:
+      name: lbl-api-schedule
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: lbl-api-schedule
+    spec:
+      containers:
+      - name: api-schedule
+        image: wesleyhinsch/api-schedule:v1.0.0
+        env:
+        - name: RABBITMQ_SERVICE
+          value: rabbitmq
+        - name: MYSQL_SERVICE
+          value: service-k8s-mysql
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-db-name
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: mysql-password
+        imagePullPolicy: Always
+        ports:
+        - name: api-schedule
+          containerPort: 8091
+          protocol: TCP
+      imagePullSecrets:
+        - name: api-schedule

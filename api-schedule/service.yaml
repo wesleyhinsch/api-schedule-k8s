@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-api-schedule
+  labels:
+    name: lbl-api-schedule
+spec:
+  selector:
+    name: lbl-api-schedule
+  ports:
+    - protocol: TCP
+      port: 8091
+      targetPort: 8091
+      nodePort: 30091
+  type: NodePort
+
